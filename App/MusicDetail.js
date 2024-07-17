@@ -85,10 +85,7 @@ export default function MusicDetail({ route, navigation }) {
           if (status.isLoaded) {
             if (status.positionMillis == status.durationMillis) {
               clearInterval(interval);
-              setPosition(0);
-              setProgress(0.01);
-              setMusicState(false);
-              sound.setPositionAsync(0);
+              nextMusic();
             } else {
               console.log("updating sound");
               setPosition(status.positionMillis);
