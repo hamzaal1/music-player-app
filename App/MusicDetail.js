@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { MaterialIcons, AntDesign } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign, SimpleLineIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import * as Progress from 'react-native-progress';
 import { useEffect, useState } from 'react';
@@ -13,6 +13,7 @@ export default function MusicDetail({ route, navigation }) {
   const [currentAudioIndex, setCurrentAudioIndex] = useState();
   const { music } = route.params;
   const [sound, setSound] = useState();
+  const [inLoop, setInLoop] = useState(false);
   const [musicState, setMusicState] = useState(false);
   const [duration, setDuration] = useState(0);
   const [position, setPosition] = useState(0);
@@ -36,6 +37,13 @@ export default function MusicDetail({ route, navigation }) {
     setCurrentAudioIndex(prevAudioIndex)
     await stopSound()
     navigation.push('MusicDetail', { music });
+  }
+  const soundInLoop = async () => {
+    if (sound) {
+      setInLoop(!inLoop);
+      await sound.setIsLoopingAsync(!inLoop);
+      console.log("set in loop", !inLoop);
+    }
   }
 
 
@@ -108,12 +116,6 @@ export default function MusicDetail({ route, navigation }) {
       : undefined;
   }, [sound]);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      console.log('Refreshed!');
-    });
-    return unsubscribe;
-  }, [navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -125,6 +127,7 @@ export default function MusicDetail({ route, navigation }) {
       <Image style={styles.image} source={music.image} />
       <Text style={styles.album_name}>{music.title}</Text>
       <Text style={styles.album}>{music.author}</Text>
+      <SimpleLineIcons style={{ color: inLoop ? 'green' : 'black' }} name="loop" size={24} onPress={soundInLoop} color="black" marginLeft='69%' marginBottom='1%' />
       <AntDesign name="hearto" style={styles.heart} size={24} color="black" marginLeft='69%' />
       <View style={styles.stats}>
         <Text>0{millisToMinutesAndSeconds(position)}</Text>
@@ -171,7 +174,7 @@ const styles = StyleSheet.create({
     marginBottom: "7%"
   },
   image: {
-    marginTop: "20%",
+    marginTop: "30%",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     borderBottomLeftRadius: 20,
@@ -181,7 +184,7 @@ const styles = StyleSheet.create({
 
   },
   album: {
-    marginBottom: "35%",
+    marginBottom: "20%",
     marginTop: "1%",
     fontSize: 14
   },

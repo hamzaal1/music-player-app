@@ -14,12 +14,12 @@
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.10.0",
     "expo": "~51.0.19",
+    "expo-av": "~14.0.6",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-progress": "^5.0.1",
-    "react-native-sound": "^0.11.2",
-    "expo-av": "~14.0.6"
+    "react-native-sound": "^0.11.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
