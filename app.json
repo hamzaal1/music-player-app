@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "app-mobile",
-    "slug": "app-mobile",
+    "slug": "diseny-musci-player",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,6 +22,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d332cb29-9ca9-42ed-b93a-2ebbd637c757"
+      }
+    },
+    "owner": "hamzademnani"
   }
 }

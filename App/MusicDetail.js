@@ -6,8 +6,11 @@ import * as Progress from 'react-native-progress';
 import { useEffect, useState } from 'react';
 import { Audio } from 'expo-av';
 
+import Data from './DATA';
+
 export default function MusicDetail({ route, navigation }) {
   const [progress, setProgress] = useState(0.008);
+  const [currentAudioIndex, setCurrentAudioIndex] = useState();
   const { music } = route.params;
   const [sound, setSound] = useState();
   const [musicState, setMusicState] = useState(false);
@@ -15,12 +18,27 @@ export default function MusicDetail({ route, navigation }) {
   const [position, setPosition] = useState(0);
 
 
-  async function playSound() {
-    loadMusic().then(async () => {
-      await sound?.playAsync();
-      setMusicState(true);
-    });
+  const playSound = async () => {
+    await loadMusic();
+    await sound.playAsync();
+    setMusicState(true);
   }
+  const nextMusic = async () => {
+    let nextAudioIndex = (currentAudioIndex + 1) % Data.length
+    let music = Data[nextAudioIndex];
+    setCurrentAudioIndex(nextAudioIndex)
+    await stopSound()
+    navigation.push('MusicDetail', { music });
+  }
+  const prevMusic = async () => {
+    let prevAudioIndex = (currentAudioIndex - 1) % Data.length
+    let music = Data[prevAudioIndex];
+    setCurrentAudioIndex(prevAudioIndex)
+    await stopSound()
+    navigation.push('MusicDetail', { music });
+  }
+
+
   const millisToMinutesAndSeconds = (millis) => {
     const minutes = Math.floor(millis / 60000);
     const seconds = ((millis % 60000) / 1000).toFixed(0);
@@ -49,6 +67,9 @@ export default function MusicDetail({ route, navigation }) {
   }
   useEffect(() => {
     loadMusic();
+    let currentAudio = Data.findIndex((elem) => elem.id == music.id);
+    setCurrentAudioIndex(currentAudio)
+    console.log(music.id);
     return sound
       ? () => {
         console.log('Unloading Sound');
@@ -66,13 +87,13 @@ export default function MusicDetail({ route, navigation }) {
               clearInterval(interval);
               setPosition(0);
               setProgress(0.01);
-              setMusicState(false)
-              setSound();
-              return;
+              setMusicState(false);
+              sound.setPositionAsync(0);
+            } else {
+              console.log("updating sound");
+              setPosition(status.positionMillis);
+              setProgress(status.positionMillis / status.durationMillis);
             }
-            console.log("updating sound");
-            setPosition(status.positionMillis);
-            setProgress(status.positionMillis / status.durationMillis);
           }
         });
       }
@@ -89,6 +110,13 @@ export default function MusicDetail({ route, navigation }) {
       }
       : undefined;
   }, [sound]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('Refreshed!');
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -108,12 +136,12 @@ export default function MusicDetail({ route, navigation }) {
       </View>
       <Progress.Bar style={styles.progress} progress={progress} width={300} color='black' button='20%' />
       <View style={styles.header}>
-        <AntDesign name="stepbackward" size={30} color="black" marginRight='15%' />
+        <AntDesign name="stepbackward" onPress={prevMusic} size={30} color="black" marginRight='15%' />
         {
           musicState ? (<Ionicons name="pause" onPress={stopSound} size={30} color="black" />) :
             (<AntDesign onPress={playSound} name="caretright" size={30} color="black" />)
         }
-        <AntDesign name="stepforward" size={30} color="black" marginLeft='15%' />
+        <AntDesign name="stepforward" onPress={nextMusic} size={30} color="black" marginLeft='15%' />
       </View>
     </SafeAreaView>
   );
