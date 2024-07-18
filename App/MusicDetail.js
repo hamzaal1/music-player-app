@@ -56,16 +56,16 @@ export default function MusicDetail({ route, navigation }) {
     setProgress((position + 3000) / duration);
   }
   const backwaredThreeSec = async () => {
-    if ((position - 3000) <= duration) {
+    if ((position - 3000) <= 0) {
       return;
     }
     console.log("backwared by 3 seconds");
     await loadMusic();
-    await sound.setPositionAsync(position + 3000);
-    setPosition(position + 3000);
-    setProgress((position + 3000) / duration);
+    await sound.setPositionAsync(position - 3000);
+    setPosition(position - 3000);
+    setProgress((position - 3000) / duration);
   }
-  
+
   const millisToMinutesAndSeconds = (millis) => {
     const minutes = Math.floor(millis / 60000);
     const seconds = ((millis % 60000) / 1000).toFixed(0);
