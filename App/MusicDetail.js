@@ -45,8 +45,27 @@ export default function MusicDetail({ route, navigation }) {
       console.log("set in loop", !inLoop);
     }
   }
-
-
+  const forwaredThreeSec = async () => {
+    if ((position + 3000) >= duration) {
+      return;
+    }
+    console.log("forwared by 3 seconds");
+    await loadMusic();
+    await sound.setPositionAsync(position + 3000);
+    setPosition(position + 3000);
+    setProgress((position + 3000) / duration);
+  }
+  const backwaredThreeSec = async () => {
+    if ((position - 3000) <= duration) {
+      return;
+    }
+    console.log("backwared by 3 seconds");
+    await loadMusic();
+    await sound.setPositionAsync(position + 3000);
+    setPosition(position + 3000);
+    setProgress((position + 3000) / duration);
+  }
+  
   const millisToMinutesAndSeconds = (millis) => {
     const minutes = Math.floor(millis / 60000);
     const seconds = ((millis % 60000) / 1000).toFixed(0);
@@ -96,6 +115,7 @@ export default function MusicDetail({ route, navigation }) {
               nextMusic();
             } else {
               console.log("updating sound");
+
               setPosition(status.positionMillis);
               setProgress(status.positionMillis / status.durationMillis);
             }
@@ -136,12 +156,15 @@ export default function MusicDetail({ route, navigation }) {
       </View>
       <Progress.Bar style={styles.progress} progress={progress} width={300} color='black' button='20%' />
       <View style={styles.header}>
+        <MaterialIcons style={{ transform: 'scaleX(-1)' }} onPress={backwaredThreeSec} name="forward-30" size={30} color="black" marginRight='5%' />
         <AntDesign name="stepbackward" onPress={prevMusic} size={30} color="black" marginRight='15%' />
         {
           musicState ? (<Ionicons name="pause" onPress={stopSound} size={30} color="black" />) :
             (<AntDesign onPress={playSound} name="caretright" size={30} color="black" />)
         }
         <AntDesign name="stepforward" onPress={nextMusic} size={30} color="black" marginLeft='15%' />
+        <MaterialIcons name="forward-30" onPress={forwaredThreeSec} size={30} color="black" marginLeft='5%' />
+
       </View>
     </SafeAreaView>
   );
