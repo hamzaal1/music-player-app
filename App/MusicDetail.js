@@ -32,6 +32,11 @@ export default function MusicDetail({ route, navigation }) {
   }
   const prevMusic = async () => {
     let prevAudioIndex = (currentAudioIndex - 1) % Data.length
+    if (prevAudioIndex < 0) {
+      console.log("reset sound in first music");
+      await sound?.setPositionAsync(0);
+      return;
+    }
     let music = Data[prevAudioIndex];
     setCurrentAudioIndex(prevAudioIndex)
     await stopSound()
@@ -70,12 +75,10 @@ export default function MusicDetail({ route, navigation }) {
     const seconds = ((millis % 60000) / 1000).toFixed(0);
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
-
   async function stopSound() {
     setMusicState(false);
     await sound.pauseAsync();
   }
-
   const loadMusic = async () => {
     if (!sound) {
       const { sound } = await Audio.Sound.createAsync(
