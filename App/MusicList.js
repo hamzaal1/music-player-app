@@ -15,6 +15,7 @@ const MusicList = ({ navigation }) => {
                 data={Data}
                 renderItem={({ item }) => (<Item music={item} />)}
                 keyExtractor={item => item.id}
+                refreshing={true}
             />
         </SafeAreaView>
     )

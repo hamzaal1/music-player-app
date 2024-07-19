@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 const Item = ({ music }) => {
     const navigation = useNavigation();
     const handlePress = () => {
-        navigation.navigate("MusicDetail", {music });
+        navigation.navigate("MusicDetail", { music });
     };
     return (
         <Pressable onPress={handlePress} style={styles.item}>
@@ -18,8 +18,6 @@ const Item = ({ music }) => {
                     <Text style={styles.author}>{music.author}</Text>
                 </View>
             </View>
-
-
         </Pressable>
     )
 };

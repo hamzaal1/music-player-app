@@ -20,8 +20,7 @@ export default function MusicDetail({ route, navigation }) {
 
 
   const playSound = async () => {
-    await loadMusic();
-    await sound.playAsync();
+    await sound?.playAsync();
     setMusicState(true);
   }
   const nextMusic = async () => {
@@ -128,6 +127,7 @@ export default function MusicDetail({ route, navigation }) {
   }, [sound, musicState]);
 
   useEffect(() => {
+    playSound();
     return sound
       ? () => {
         console.log('Unloading Sound');
@@ -202,9 +202,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    // borderWidth:10,
-    // borderColor:"#FEFAE0",
-
   },
   album: {
     marginBottom: "20%",
@@ -219,13 +216,4 @@ const styles = StyleSheet.create({
   heart: {
     button: '100%',
   }
-
-  // text: {
-  //   fontWeight: 'bold',
-  //   fontSize: 20,
-  //   // top: '-20%',
-  // },
-  // text1: {
-  //   // top: '-17%'
-  // },
 });
